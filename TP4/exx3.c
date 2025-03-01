@@ -6,8 +6,9 @@ int saisie_remplir(char ***ch) {
     int i = 0;
     int choix = 1;
     while (choix == 1) {
-        *ch = realloc(*ch, (i + 1) * sizeof(char*));
-        (*ch)[i] = malloc(100 * sizeof(char)); // (*ch)[i] == *(*ch + i)
+        *ch = realloc(*ch, (i + 1) * sizeof(char*)); // access lel tableau de pointeur li ytpointa 3al les tabs de strings
+        // (*ch)[i] == *(*ch + i)
+        (*ch)[i] = malloc(100 * sizeof(char)); // access lel chaine de caractere bidha (el char*)
         printf("saisir chaine : ");
         scanf("%s", (*ch)[i]);
         printf("continue (1 or 0) : ");
