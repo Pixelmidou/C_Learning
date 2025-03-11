@@ -62,10 +62,8 @@ char** decoupe(char *s) {
     int nb = abs(nb_espaces(s));
     char **t = malloc((nb + 1) * sizeof(char*));
     int i = 0;
-    // puts(s);
     while (*s != '\0') {
         char *space = strchr(s, ' ');
-        // printf("%p",space);
         if (space == NULL) {
             t[i] = malloc((strlen(s) + 1) * sizeof(char));
             strcpy(t[i], s);
@@ -77,7 +75,6 @@ char** decoupe(char *s) {
             t[i][space - s] = '\0';
             i++;
             s = space + 1;
-            // puts(t[i]);
         }
     }
     t[i] = NULL;
