@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 typedef struct {
     char *a;
@@ -8,14 +9,24 @@ typedef struct {
 } traduction;
 
 void remplir(traduction *dico,int n) {
-    for (traduction *p=dico;p < dico+n;p++) {
+        printf("traduction 1\n");
+        char x[100];
+        printf("saisir a : "); scanf("%s",x); printf("\n");
+        dico->a = malloc(strlen(x)*sizeof(char*));
+        strcpy(dico->a,x);
+        printf("saisir b : "); scanf("%s",x); printf("\n");
+        dico->b = malloc(strlen(x)*sizeof(char*));
+        strcpy(dico->b,x);
+    for (traduction *p=dico+1;p < dico+n;p++) {
         printf("traduction %d\n",p-dico+1);
-        p->a = (char*) malloc(100*sizeof(char));
-        p->b = (char*) malloc(100*sizeof(char));
-        printf("saisir a : "); scanf("%s",p->a);
-        printf("\n");
-        printf("saisir b : "); scanf("%s",p->b);
-        printf("\n");
+        do {
+            printf("saisir a : "); scanf("%s",x); printf("\n");
+            p->a = malloc(strlen(x)*sizeof(char*));
+            strcpy(p->a,x);
+            printf("saisir b : "); scanf("%s",x); printf("\n");
+            p->b = malloc(strlen(x)*sizeof(char*));
+            strcpy(p->b,x);
+        } while (strcmp((p-1)->a ,p->a) > 0);
     }
 }
 
@@ -28,18 +39,6 @@ void affiche(traduction *dico,int n) {
     printf("\n");
 }
 
-void tri(traduction *dico, int n) {
-    for (traduction *p1=dico;p1 < dico+n-1;p1++) {
-        for (traduction *p2=p1+1;p2 < dico+n;p2++) {
-            if (strcmp(p1->a, p2->a) > 0) {
-                traduction aux = *p1;
-                *p1 = *p2;
-                *p2 = aux;
-            }
-        }
-    }
-}
-
 char* recherche(traduction *dico,int n, char *s) {
     for (traduction *p=dico;p < dico+n;p++) {
         if (strcasecmp(p->a, s) == 0) {
@@ -49,18 +48,88 @@ char* recherche(traduction *dico,int n, char *s) {
     return NULL;
 }
 
+int nb_espaces(char *s) {
+    int i;
+    while (s[i] != '\0') {
+        if (isspace(s[i])) {
+            i++;
+        }
+    }
+    return i;
+}
+
+char** decoupe(char *s) {
+    int nb = abs(nb_espaces(s));
+    char **t = malloc((nb + 1) * sizeof(char*));
+    int i = 0;
+    // puts(s);
+    while (*s != '\0') {
+        char *space = strchr(s, ' ');
+        // printf("%p",space);
+        if (space == NULL) {
+            t[i] = malloc((strlen(s) + 1) * sizeof(char));
+            strcpy(t[i], s);
+            i++;
+            break;
+        } else {
+            t[i] = malloc((space - s + 1) * sizeof(char));
+            strncpy(t[i], s, space - s);
+            t[i][space - s] = '\0';
+            i++;
+            s = space + 1;
+            // puts(t[i]);
+        }
+    }
+    t[i] = NULL;
+    return t;
+}
+
+char* reconstruit(char **t) {
+    int size = 0;
+    for (int i = 0; t[i] != NULL; i++) {
+        size += strlen(t[i]);
+        size++;
+    }
+    char *ch = malloc((size+1)*sizeof(char));
+    int i = 0;
+    for (int j = 0; t[j] != NULL; j++) {
+        strcpy(ch+i, t[j]);
+        i += strlen(t[j]);
+        ch[i] = ' ';
+        i++;
+    }
+    ch[i-1] = '\0';
+    return ch;
+}
+
+char* traitement(char **t,traduction *dico,int nd) {
+    int nt = 0;
+    while (t[nt] != NULL) nt++;
+    char **t1 = malloc((nt+1)*sizeof(char*));
+    int i;
+    int j = 0;
+    for (i = 0; t[i] != NULL; i++) {
+        char *x = recherche(dico,nd,t[i]);
+        if (x != NULL) {
+            t1[j] = malloc(strlen(x)*sizeof(char));
+            strcpy(t1[j],x);
+            j++;
+        }
+    }
+    t1[j] = NULL;
+    char *res = reconstruit(t1);
+    return res;
+}
+
 int main() {
     int n;
     printf("donner n : "); scanf("%d",&n);
     traduction *dico = malloc(n*sizeof(traduction));
     remplir(dico,n);
-    printf("affichage original :\n");
-    affiche(dico,n);
-    tri(dico,n);
-    printf("affichage trie :\n");
     affiche(dico,n);
     char *s = malloc(100*sizeof(char));
-    printf("donner mot recherche : "); scanf("%s",s);
-    printf("traduction de %s est %s",s,recherche(dico,n,s));
+    fflush(stdin); printf("donner phrase recherche : "); gets(s);
+    char **t = decoupe(s);
+    printf(traitement(t,dico,n));
     return 0;
 }
