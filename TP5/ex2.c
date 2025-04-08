@@ -33,7 +33,11 @@ FILE* charger(char* nom_ficher) {
     char ch[200];
     printf("saisir chaine : ");
     gets(ch);
-    fputs(ch,alpha);
+    for (int i = 0; ch[i] != '\0'; i++) {
+        if (ch[i] >= 'A' && ch[i] <= 'Z' || ch[i] >= 'a' && ch[i] <= 'z') {
+            fprintf(alpha,"%c",ch[i]);
+        }
+    }
     fclose(alpha);
     return alpha;
 }
