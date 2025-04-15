@@ -35,6 +35,7 @@ FILE* charger(char* nom_ficher) {
     gets(ch);
     for (int i = 0; ch[i] != '\0'; i++) {
         if (ch[i] >= 'A' && ch[i] <= 'Z' || ch[i] >= 'a' && ch[i] <= 'z') {
+        // OU : if (isalpha((unsigned char)ch[i])) ...
             fprintf(alpha,"%c",ch[i]);
         }
     }
