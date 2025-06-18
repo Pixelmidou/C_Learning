@@ -1,5 +1,0 @@
-
-config for the code runner vs-code extension that specifies how gcc-g++ should compile and execute
-
-"c": "cls; cd $dir; if (-not (Test-Path -Path \"bin\")) { New-Item -ItemType Directory -Path \"bin\" | Out-Null }; gcc $fileName -o \"bin\\$fileNameWithoutExt.exe\"; .\\bin\\$fileNameWithoutExt.exe",
-"cpp": "cls; cd $dir; if (-not (Test-Path -Path \"bin\")) { New-Item -ItemType Directory -Path \"bin\" | Out-Null }; g++ $fileName -o \"bin\\$fileNameWithoutExt.exe\"; .\\bin\\$fileNameWithoutExt.exe",
